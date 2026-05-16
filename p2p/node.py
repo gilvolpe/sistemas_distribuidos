@@ -2,7 +2,7 @@ import threading
 import socket
 import sys
 import random
-
+import time
 
 SERVER_PORT = 9000
 P2P_PORT = 6000
@@ -69,16 +69,22 @@ class P2PNode:
             seconds_to_sleep = [1,2,3,4,5,6,7,8,9,10]
             with list_of_addres_lock:
                 list_peers = list(self.peers)
-                print(f'List of peers to conect {list_peers}')
+                if len(list_peers) > 0: 
+                    print(f'List of peers to conect {list_peers}')
 
             if len(list_peers) > 0:
                 ip  = random.choice(list_peers)
                 msg = random.choice(MSG)
 
-                client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                client.connect((ip,self.port))
-                client.send(msg.encode('utf-8'))
-                client.close()
+                try:
+
+                    client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+                    client.connect((ip,self.port))
+                    client.send(msg.encode('utf-8'))
+                except:
+                    pass
+                finally:
+                    client.close()
 
                 time.sleep(random.choice(seconds_to_sleep))
         
